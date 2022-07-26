@@ -2,7 +2,7 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
-import { Raycaster } from 'three'
+import { Raycaster, Vector2 } from 'three'
 
 /**
  * Base
@@ -80,6 +80,17 @@ window.addEventListener('resize', () =>
 })
 
 /**
+ * Mouse 
+ */
+const mouse = new THREE.Vector2();
+window.addEventListener('mousemove', () => {
+    mouse.x = event.clientX / sizes.width * 2 - 1;
+    mouse.y = - (event.clientY / sizes.height) * 2 + 1;
+
+    console.log(mouse.y)
+})
+
+/**
  * Camera
  */
 // Base camera
@@ -115,11 +126,7 @@ const tick = () =>
     object3.position.y = Math.sin(elapsedTime * 1.4) * 1.5;
 
     //Casting a ray
-    const rayOrigin = new THREE.Vector3(-3, 0, 0);
-    const rayDirection = new THREE.Vector3(1,0,0);
-    rayDirection.normalize();
-
-    raycaster.set(rayOrigin,rayDirection);
+    raycaster.setFromCamera(mouse, camera);
 
     const objectsToTest = [object1, object2, object3];
     const intersects = raycaster.intersectObjects(objectsToTest);
@@ -127,6 +134,7 @@ const tick = () =>
     for(const object of objectsToTest){
         object.material.color.set('#FF0000');
     }
+    
     for(const intersect of intersects){
         intersect.object.material.color.set('#0000FF');
     }
