@@ -66,6 +66,14 @@ sphere.castShadow = true
 sphere.position.y = 0.5
 scene.add(sphere)
 
+//Floor
+const floorShape =  new CANNON.Plane()
+const floorBody = new CANNON.Body()
+floorBody.mass = 0
+floorBody.addShape(floorShape)
+floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1,0,0), Math.PI * 0.5)
+world.addBody(floorBody)
+
 /**
  * Floor
  */
