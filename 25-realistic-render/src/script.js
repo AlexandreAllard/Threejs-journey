@@ -2,6 +2,14 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+
+/**
+ * Loaders
+ */
+const gltfLoader = new GLTFLoader()
+const cubeTextureLoader = new THREE.CubeTextureLoader()
+
 
 /**
  * Base
@@ -16,18 +24,36 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 /**
- * Test sphere
+ * Environment Map
  */
-const testSphere = new THREE.Mesh(
-    new THREE.SphereGeometry(1, 32, 32),
-    new THREE.MeshStandardMaterial()
-)
-scene.add(testSphere)
+const environmentMap = cubeTextureLoader.load([
+    '/textures/environmentMaps/0/px.jpg',
+    '/textures/environmentMaps/0/nx.jpg',
+    '/textures/environmentMaps/0/py.jpg',
+    '/textures/environmentMaps/0/ny.jpg',
+    '/textures/environmentMaps/0/pz.jpg',
+    '/textures/environmentMaps/0/nz.jpg'
+])
+scene.background = environmentMap
+/**
+ * Models
+ */
+gltfLoader.load(
+    '/models/FlightHelmet/glTF/FlightHelmet.gltf',
+    (gltf) => {
+        gltf.scene.scale.set(10,10,10)
+        gltf.scene.position.set(0,-4,0)
+        gltf.scene.rotation.y = Math.PI * 0.5
 
+        scene.add(gltf.scene)
+
+        gui.add(gltf.scene.rotation, 'y').min(-Math.PI).max(Math.PI).step(0.001).name('rotation')
+    }   
+)
 /**
  * Lights
  */
-const directionalLight = new THREE.DirectionalLight('#ffffff', 1)
+const directionalLight = new THREE.DirectionalLight('#ffffff', 3)
 directionalLight.position.set(0.25,3,-2.25)
 scene.add(directionalLight)
 
@@ -80,6 +106,7 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+renderer.physicallyCorrectLights = true
 
 /**
  * Animate
