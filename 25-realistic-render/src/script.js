@@ -16,12 +16,26 @@ const cubeTextureLoader = new THREE.CubeTextureLoader()
  */
 // Debug
 const gui = new dat.GUI()
+const debugObjects = {}
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+
+/**
+ * Update all materials
+ */
+
+const updateAllMaterials = () => {
+    scene.traverse((child) => {
+        if(child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial){
+            // child.material.envMap = environmentMap
+            child.material.envMapIntensity = debugObjects.envMapIntensity
+        }
+    })
+}
 
 /**
  * Environment Map
@@ -35,6 +49,11 @@ const environmentMap = cubeTextureLoader.load([
     '/textures/environmentMaps/0/nz.jpg'
 ])
 scene.background = environmentMap
+scene.environment = environmentMap
+
+debugObjects.envMapIntensity = 5
+gui.add(debugObjects, 'envMapIntensity').min(0).max(10).step(0.001).onChange(updateAllMaterials)
+
 /**
  * Models
  */
@@ -48,8 +67,13 @@ gltfLoader.load(
         scene.add(gltf.scene)
 
         gui.add(gltf.scene.rotation, 'y').min(-Math.PI).max(Math.PI).step(0.001).name('rotation')
+
+        updateAllMaterials();
     }   
 )
+
+
+
 /**
  * Lights
  */
@@ -107,6 +131,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 renderer.physicallyCorrectLights = true
+renderer.outputEncoding = THREE.sRGBEncoding
 
 /**
  * Animate
