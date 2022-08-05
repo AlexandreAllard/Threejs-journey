@@ -3,7 +3,7 @@ varying vec2 vUv;
 void main()
 {
     //Pattern 3
-    // float strength = vUv.x;
+    /// float strength = vUv.x;
 
     //Pattern 4
     // float strength = vUv.y;
