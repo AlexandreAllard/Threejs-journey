@@ -107,8 +107,10 @@ void main()
     // float strength = random(gridUv); 
 
     // Pattern 26
-    float strength = length(vUv);     
+    // float strength = length(vUv);     
 
+    // Pattern 27
+    float strength = length(vUv-0.5);  
 
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
