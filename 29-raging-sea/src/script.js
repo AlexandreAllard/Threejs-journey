@@ -25,8 +25,8 @@ const scene = new THREE.Scene()
 const waterGeometry = new THREE.PlaneGeometry(2, 2, 128, 128)
 
 //Color
-debugObject.depthColor = '#0000ff'
-debugObject.surfaceColor = '#8888ff'
+debugObject.depthColor = '#186691'
+debugObject.surfaceColor = '#9bd8ff'
 
 // Material
 const waterMaterial = new THREE.ShaderMaterial({
@@ -37,10 +37,12 @@ const waterMaterial = new THREE.ShaderMaterial({
 
         uBigWavesElevation: { value: 0.2 },
         uBigWavesFrequency: { value: new THREE.Vector2(4, 1.5)},
-        uBigWavesSpeed: { value: 0.5 },
+        uBigWavesSpeed: { value: 0.75 },
 
         uDepthColor: { value: new THREE.Color(debugObject.depthColor)},
         uSurfaceColor: { value: new THREE.Color(debugObject.surfaceColor)},
+        uColorOffset: { value: 0.08 },
+        uColorMultiplier: { value: 5 }
     }
 })
 
@@ -56,6 +58,11 @@ gui.addColor(debugObject, 'surfaceColor').name('surfaceColor').onChange( () => {
 gui.addColor(debugObject, 'depthColor').name('depthColor').onChange( () => {
     waterMaterial.uniforms.uDepthColor.value.set(debugObject.depthColor)
 })
+
+gui.add(waterMaterial.uniforms.uColorOffset, 'value').min(0).max(1).step(0.001).name('uColorOffset')
+gui.add(waterMaterial.uniforms.uColorMultiplier, 'value').min(0).max(10).step(0.001).name('uColorMultiplier')
+
+
 // Mesh
 const water = new THREE.Mesh(waterGeometry, waterMaterial)
 water.rotation.x = - Math.PI * 0.5
