@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 import testVertexShader from './shaders/test/vertex.glsl'
 import fragmentVertexShader from './shaders/test/fragment.glsl'
+import { MaxEquation } from 'three'
 
 /**
  * Base
@@ -43,9 +44,13 @@ const material = new THREE.RawShaderMaterial({
     fragmentShader: fragmentVertexShader,
     transparent: true,
     uniforms:{
-        uFrequency: { value: new THREE.Vector2(10, 5) }
+        uFrequency: { value: new THREE.Vector2(10, 5) },
+        uTime: { value: 0}
     }
 })
+
+gui.add(material.uniforms.uFrequency.value, 'x').min(0).max(20).step(0.01).name('frequencyX')
+gui.add(material.uniforms.uFrequency.value, 'y').min(0).max(20).step(0.01).name('frequencyY')
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)
@@ -103,6 +108,9 @@ const clock = new THREE.Clock()
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
+
+    //Update material
+    material.uniforms.uTime.value = elapsedTime
 
     // Update controls
     controls.update()
