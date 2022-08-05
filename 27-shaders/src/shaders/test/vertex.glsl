@@ -5,6 +5,9 @@ uniform vec2 uFrequency;
 uniform float uTime;
 
 attribute vec3 position;
+attribute vec2 uv;
+
+varying vec2 vUv;
 
 // varying float vRandom;
 
@@ -21,4 +24,5 @@ void main()
     gl_Position = projectedPosition;
     //gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0); //Positions the vertex on the screen, it'll return a vec4
 
+    vUv = uv;
 }
