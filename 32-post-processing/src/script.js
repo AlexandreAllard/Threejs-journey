@@ -154,7 +154,7 @@ const renderTarget = new THREE.WebGLRenderTarget(
     800,
     600,
     {
-        // samples: renderer.getPixelRatio() === 1 ? 2 : 0
+        samples: renderer.getPixelRatio() === 1 ? 2 : 0
     }
 )
 
@@ -184,8 +184,11 @@ gammaCorrectionPass.enabled = true
 effectComposer.addPass(gammaCorrectionPass)
 
 // SMAA pass
-const smaaPass = new SMAAPass()
-effectComposer.addPass(smaaPass)
+if(renderer.getPixelRatio() === 1 && !renderer.capabilities.isWebGL2){
+    const smaaPass = new SMAAPass()
+    effectComposer.addPass(smaaPass)
+}
+
 
 /**
  * Animate
