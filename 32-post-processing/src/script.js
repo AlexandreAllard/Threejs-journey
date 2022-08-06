@@ -173,7 +173,7 @@ effectComposer.addPass(dotScreenPass)
 
 const glitchPass = new GlitchPass()
 // glitchPass.goWild = true
-glitchPass.enabled = true
+glitchPass.enabled = false
 effectComposer.addPass(glitchPass)
 
 const rgbShiftPass = new ShaderPass(RGBShiftShader)
@@ -181,6 +181,7 @@ rgbShiftPass.enabled = false
 effectComposer.addPass(rgbShiftPass)
 
 const unrealBloomPass = new UnrealBloomPass()
+unrealBloomPass.enabled = true
 unrealBloomPass.Strength = 0.3
 unrealBloomPass.radius = 1
 unrealBloomPass.threshold = 0.6
@@ -194,6 +195,49 @@ gui.add(unrealBloomPass, 'threshold').min(0).max(1).step(0.001)
 const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader)
 gammaCorrectionPass.enabled = true
 effectComposer.addPass(gammaCorrectionPass)
+
+// Tint pass
+
+const TintShader = {
+    uniforms: {
+        tDiffuse: { value: null },
+        uTint: { value: null }
+    },
+    vertexShader: `
+        varying vec2 vUv;
+
+        void main()
+        {
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
+            vUv = uv;
+        }
+    `,
+    fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform vec3 uTint;
+
+        varying vec2 vUv;
+
+        void main()
+            {
+                vec4 color = texture2D(tDiffuse, vUv);
+                color.rgb += uTint;
+
+                gl_FragColor = color;
+            }
+    `
+}
+
+const tintPass = new ShaderPass(TintShader)
+tintPass.material.uniforms.uTint.value = new THREE.Vector3()
+effectComposer.addPass(tintPass)
+
+gui.add(tintPass.material.uniforms.uTint.value, 'x').min(-1).max(1).step(0.001).name('red')
+gui.add(tintPass.material.uniforms.uTint.value, 'y').min(-1).max(1).step(0.001).name('green')
+gui.add(tintPass.material.uniforms.uTint.value, 'z').min(-1).max(1).step(0.001).name('blue')
+
+
 
 // SMAA pass
 if(renderer.getPixelRatio() === 1 && !renderer.capabilities.isWebGL2){
