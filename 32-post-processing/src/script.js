@@ -9,6 +9,8 @@ import { DotScreenPass } from 'three/examples/jsm/postprocessing/DotScreenPass.j
 import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass.js'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { RGBShiftShader } from 'three/examples/jsm/shaders/RGBShiftShader.js'
+import { GammaCorrectionShader } from 'three/examples/jsm/shaders/GammaCorrectionShader.js'
+
 
 /**
  * Base
@@ -159,9 +161,12 @@ glitchPass.enabled = false
 effectComposer.addPass(glitchPass)
 
 const rgbShiftPass = new ShaderPass(RGBShiftShader)
-rgbShiftPass.enabled = true
+rgbShiftPass.enabled = false
 effectComposer.addPass(rgbShiftPass)
 
+const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader)
+gammaCorrectionPass.enabled = true
+effectComposer.addPass(gammaCorrectionPass)
 
 
 /**
