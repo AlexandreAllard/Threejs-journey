@@ -7,6 +7,8 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { DotScreenPass } from 'three/examples/jsm/postprocessing/DotScreenPass.js'
 import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass.js'
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
+import { RGBShiftShader } from 'three/examples/jsm/shaders/RGBShiftShader.js'
 
 /**
  * Base
@@ -153,8 +155,13 @@ effectComposer.addPass(dotScreenPass)
 
 const glitchPass = new GlitchPass()
 // glitchPass.goWild = true
-glitchPass.enabled = true
+glitchPass.enabled = false
 effectComposer.addPass(glitchPass)
+
+const rgbShiftPass = new ShaderPass(RGBShiftShader)
+rgbShiftPass.enabled = true
+effectComposer.addPass(rgbShiftPass)
+
 
 
 /**
