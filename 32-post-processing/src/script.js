@@ -6,6 +6,7 @@ import * as dat from 'lil-gui'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { DotScreenPass } from 'three/examples/jsm/postprocessing/DotScreenPass.js'
+import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass.js'
 
 /**
  * Base
@@ -149,6 +150,11 @@ effectComposer.addPass(renderPass)
 const dotScreenPass = new DotScreenPass()
 dotScreenPass.enabled = false
 effectComposer.addPass(dotScreenPass)
+
+const glitchPass = new GlitchPass()
+// glitchPass.goWild = true
+glitchPass.enabled = true
+effectComposer.addPass(glitchPass)
 
 
 /**
