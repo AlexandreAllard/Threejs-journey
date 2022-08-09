@@ -53,7 +53,7 @@ const bakedMaterial = new THREE.MeshBasicMaterial({ map: bakedTexture })
 const poleLightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffe5 })
 
 // Portal light material
-const portalLightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff })
+const portalLightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide })
 
 /**
  * Model
@@ -78,6 +78,29 @@ gltfLoader.load(
     }
 )
 
+/**
+ * Fireflies
+ */
+// Geometry
+const firefliesGeometry = new THREE.BufferGeometry()
+const firefliesCount = 30
+const positionArray = new Float32Array(firefliesCount * 3)
+
+for (let i = 0; i < firefliesCount; i++){
+    positionArray[i * 3 + 0] = Math.random() * 4;
+    positionArray[i * 3 + 1] = Math.random() * 4;
+    positionArray[i * 3 + 2] = Math.random() * 4;
+
+}
+
+firefliesGeometry.setAttribute('position', new THREE.BufferAttribute(positionArray, 3))
+
+// Material
+const firefliesMaterial = new THREE.PointsMaterial({ size: 0.1, sizeAttenuation: true})
+
+// Points
+const fireflies = new THREE.Points(firefliesGeometry, firefliesMaterial)
+scene.add(fireflies)
 /**
  * Sizes
  */
